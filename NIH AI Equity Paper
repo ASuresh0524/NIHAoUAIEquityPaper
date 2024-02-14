@@ -1,0 +1,63 @@
+# Importing necessary libraries
+import numpy as np
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import confusion_matrix
+from imblearn.over_sampling import SMOTE
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.decomposition import PCA
+from sklearn.model_selection import GridSearchCV
+from sklearn.utils import shuffle
+
+# Generate a synthetic dataset
+X, y = make_classification(n_samples=1000, n_features=20, n_classes=2, weights=[0.95, 0.05], random_state=42)
+
+# Splitting the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Apply SMOTE for oversampling minority class
+smote = SMOTE(random_state=42)
+X_train_resampled, y_train_resampled = smote.fit_resample(X_train, y_train)
+
+# Define a Random Forest classifier pipeline with PCA preprocessing
+pipeline = Pipeline([
+    ('scaler', StandardScaler()),
+    ('pca', PCA()),
+    ('clf', RandomForestClassifier(random_state=42))
+])
+
+# Define parameter grid for GridSearchCV
+param_grid = {
+    'pca__n_components': [5, 10, 15],
+    'clf__n_estimators': [50, 100, 200],
+    'clf__max_depth': [None, 10, 20]
+}
+
+# Instantiate GridSearchCV
+grid_search = GridSearchCV(pipeline, param_grid, cv=5, scoring='accuracy', n_jobs=-1)
+
+# Fit the model
+grid_search.fit(X_train_resampled, y_train_resampled)
+
+# Predictions on the test set
+y_pred = grid_search.predict(X_test)
+
+# Evaluation metrics
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+
+# Confusion matrix
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+# Output results
+print("Accuracy:", accuracy)
+print("Precision:", precision)
+print("Recall:", recall)
+print("F1 Score:", f1)
+print("Confusion Matrix:\n", conf_matrix)
+print("Best Parameters:", grid_search.best_params_)
