@@ -1,0 +1,11 @@
+age,gender,race,blood_pressure,heart_rate,diabetes
+45,M,White,120,75,0
+62,F,Black,135,82,1
+38,M,Hispanic,118,68,0
+55,F,Asian,125,72,0
+71,M,White,142,88,1
+29,F,Black,115,70,0
+48,M,Asian,128,76,0
+67,F,Hispanic,138,85,1
+52,M,White,122,74,0
+43,F,Black,119,71,0 

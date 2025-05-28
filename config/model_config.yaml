@@ -1,0 +1,53 @@
+# Model Configuration
+
+# GAN Parameters
+gan:
+  input_dim: 100
+  hidden_dim: 128
+  learning_rate: 0.0002
+  beta1: 0.5
+  beta2: 0.999
+  epochs: 100
+  batch_size: 32
+
+# Data Processing
+data:
+  categorical_features:
+    - gender
+    - race
+  numerical_features:
+    - age
+    - blood_pressure
+    - heart_rate
+  target_column: diabetes
+  test_size: 0.2
+  random_seed: 42
+
+# Fairness Parameters
+fairness:
+  protected_attributes:
+    - gender
+    - race
+  metrics:
+    - demographic_parity
+    - equal_opportunity
+    - equalized_odds
+  disparity_threshold: 0.1
+
+# Training
+training:
+  synthetic_samples: 1000
+  classifier:
+    model: random_forest
+    n_estimators: 100
+    max_depth: 10
+    random_state: 42
+
+# Paths
+paths:
+  data_dir: data
+  model_dir: models
+  output_dir: outputs
+  raw_data: data/raw
+  processed_data: data/processed
+  synthetic_data: data/synthetic 
